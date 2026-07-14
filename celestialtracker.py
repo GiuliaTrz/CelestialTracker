@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 import time
 
 class CelestialTracker:
@@ -16,6 +17,14 @@ class CelestialTracker:
 
         
         return
+
+    def shouldUpdateTLE(self, satellite) -> bool:
+        """
+        Returns True if the TLE file is older than 24 hours (UTC date time)
+        """
+        tle_date = satellite.epoch.utc_datetime()
+        now = datetime.now(timezone.utc)
+        return (now - tle_date) > timedelta(hours=24)
 
     def azimuth_to_cardinals(self, az):
         directions = [
