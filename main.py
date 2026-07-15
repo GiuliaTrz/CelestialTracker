@@ -1,6 +1,6 @@
 import argparse
-from celestialtracker import CelestialTracker
-
+from celestialtracker.celestialtracker import CelestialTracker
+from celestialtracker.tleloader import TLELoader
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("latitude",  help="Your latitude")
@@ -12,7 +12,18 @@ def main():
     longitude = float(args.longitude)
 
     c = CelestialTracker()
-    c.getISSPredictions(latitude, longitude)
+    predictions = c.getISSPredictions(latitude, longitude)
+    
+    print(predictions)
+
+    # TLE download demo
+    url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle"
+    file = "output.txt"
+    td = TLELoader(url,file)
+    print(td.getSatellites())
+    print(td.downloadTLE())
+    print(td.getSatellites())
+    
 
 if __name__ == "__main__":
     main()
