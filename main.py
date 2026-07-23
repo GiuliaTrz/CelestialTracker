@@ -6,6 +6,19 @@ TLE_ENDPOINT = "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMA
 TLE_FILE = "tle_data.tle"
 DEFAULT_SATELLITE_INDEX = 0
 
+
+# TLE download demo
+td = TLELoader(TLE_ENDPOINT,TLE_FILE)
+#td.downloadTLE()
+    
+def showSatellites():
+    satellites = td.getSatellites()
+    print ("Satellites:")
+
+    for index, satellite in enumerate(satellites) :
+        print(f"{index}\t{satellite.name}")
+
+
 def main():
     parser = argparse.ArgumentParser()
     # Mandatory positional arguments
@@ -19,8 +32,18 @@ def main():
 
     parser.add_argument("-a","--horizon_altitude", help="Degrees above the horizon", default=10, type=float)
 
+    parser.add_argument('-l', '--list_satellites', action='store_true', help="Shows satellites contained in the TLE file")  
+
+    parser.add_argument("-s","--satellite", help="Satellite index in the TLE file", default=0, type=int)
+
+
     args = parser.parse_args()
+    if args.list_satellites == True:
+        showSatellites()
+        return
+
     print(f"LAT: {args.latitude}  LON: {args.longitude}")
+
 
     latitude = float(args.latitude)
     longitude = float(args.longitude)
@@ -33,11 +56,6 @@ def main():
     print(predictions)
 
     print("----\n\n")
-
-    # TLE download demo
-    td = TLELoader(TLE_ENDPOINT,TLE_FILE)
-    #td.downloadTLE()
-    print(td.getSatellites())
     
 
 if __name__ == "__main__":
