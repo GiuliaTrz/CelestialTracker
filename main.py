@@ -18,12 +18,23 @@ def showSatellites():
     for index, satellite in enumerate(satellites) :
         print(f"{index}\t{satellite.name}")
 
+def getSatellitePredictions(satelliteIndex, latitude, longitude,elevation,horizon_altitude,date):
+    satellites = td.getSatellites()
+
+    print(f"Satellite Index: {satelliteIndex}")
+    print(f"Satellite      : {satellites[satelliteIndex]}")
+
+    c = CelestialTracker()
+    predictions = c.getISSPredictions(latitude, longitude,elevation,horizon_altitude,date)
+    
+    print("----\n\n")
+
+    print(predictions)
+
+    print("----\n\n")
 
 def main():
     parser = argparse.ArgumentParser()
-    # Mandatory positional arguments
-    parser.add_argument("latitude",  help="Your latitude")
-    parser.add_argument("longitude", help="Your longitude")
 
     # Optional flags
     parser.add_argument("-d","--date", help="The date for wich you want to get the satellite passes forecast (empty for current date) (format: yyyy-mm-dd)", default="",type=str)
@@ -36,26 +47,23 @@ def main():
 
     parser.add_argument("-s","--satellite", help="Satellite index in the TLE file", default=0, type=int)
 
+    parser.add_argument("latitude", nargs="?", type=float)
+    parser.add_argument("longitude", nargs="?", type=float)
 
     args = parser.parse_args()
     if args.list_satellites == True:
         showSatellites()
         return
+    else:
+        if args.latitude is None or args.longitude is None:
+            parser.error("latitude and longitude are required unless -l is specified")
+            
+        print(f"LAT: {args.latitude}  LON: {args.longitude}")
 
-    print(f"LAT: {args.latitude}  LON: {args.longitude}")
+        latitude = float(args.latitude)
+        longitude = float(args.longitude)
 
-
-    latitude = float(args.latitude)
-    longitude = float(args.longitude)
-
-    c = CelestialTracker()
-    predictions = c.getISSPredictions(latitude, longitude,args.elevation,args.horizon_altitude,args.date)
-    
-    print("----\n\n")
-
-    print(predictions)
-
-    print("----\n\n")
+        getSatellitePredictions(args.satellite, latitude, longitude,args.elevation,args.horizon_altitude,args.date)
     
 
 if __name__ == "__main__":
