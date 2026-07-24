@@ -6,18 +6,11 @@ import time
 
 class CelestialTracker:
 
-    def __init__(self):
+    def __init__(self, satellite : EarthSatellite):
         self._times = None
         self._events = None
-        self._satellite = None
+        self._satellite = satellite
         self._observer = None
-        # https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle
-        # TODO: remove
-        self.tleString :str = """
-        ISS (ZARYA)             
-        1 25544U 98067A   26195.41159911  .00003993  00000+0  80585-4 0  9997
-        2 25544  51.6306 165.3606 0006702 294.7447  65.2843 15.49007257575973
-        """
         pass
 
     def getISSPredictions(self, latitude : float, longitude : float, elevation_meters : float = 20, altitude_degrees : float = 10.0, date : str = ""):
@@ -28,17 +21,9 @@ class CelestialTracker:
                 tzinfo=timezone.utc
             )
 
-        print(f"DEBUG : Using timestamp: {date}")
-
-        tleData = TLE(tle_string=self.tleString)
-
-        tleLines = tleData.serialize_to_parts()
 
         ts = load.timescale()
 
-        self._satellite = EarthSatellite(tleLines[1], tleLines[2], tleLines[0], ts)
-
-        print(f"DEBUG : SATELLITE: {self._satellite}")
 
         self._observer = wgs84.latlon(
             latitude_degrees=latitude,
@@ -52,7 +37,6 @@ class CelestialTracker:
         tMax = ts.from_datetime(
             date
         )
-        #ts.utc(2026,7,18,00,00,00) 
 
         self._times, self._events = self._satellite.find_events(self._observer, t, tMax, altitude_degrees=altitude_degrees)
         

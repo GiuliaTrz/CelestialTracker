@@ -24,7 +24,7 @@ def getSatellitePredictions(satelliteIndex, latitude, longitude,elevation,horizo
     print(f"Satellite Index: {satelliteIndex}")
     print(f"Satellite      : {satellites[satelliteIndex]}")
 
-    c = CelestialTracker()
+    c = CelestialTracker(satellites[satelliteIndex])
     predictions = c.getISSPredictions(latitude, longitude,elevation,horizon_altitude,date)
     
     print("----\n\n")
@@ -57,7 +57,7 @@ def main():
     else:
         if args.latitude is None or args.longitude is None:
             parser.error("latitude and longitude are required unless -l is specified")
-            
+
         print(f"LAT: {args.latitude}  LON: {args.longitude}")
 
         latitude = float(args.latitude)
