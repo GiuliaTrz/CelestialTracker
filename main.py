@@ -5,7 +5,7 @@ import sys
 from celestialtracker.celestialtracker import CelestialTracker
 from celestialtracker.tleloader import TLELoader
 from prettytable import PrettyTable
-
+import json
 TLE_ENDPOINT = "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle"
 TLE_FILE = "tle_data.tle"
 DEFAULT_SATELLITE_INDEX = 0
@@ -43,25 +43,37 @@ def shouldUpdateTLE(satellite) -> bool:
     now = datetime.now(timezone.utc)
     return (now - tle_date) > timedelta(hours=24)
 
-def getSatellitePredictions(satelliteIndex, latitude, longitude,elevation,horizon_altitude,date):
+
+def printPrettyTable(predictions):
+    for event in predictions["events"]: 
+        print(f"Event: {event["event_time"]}")
+        table = PrettyTable()
+        table.field_names = ["Type", "Timestamp", "Elevation°", "Azimuth°", "Cardinal", "Distance (Km)"]
+        for phase in event["phases"] : 
+            table.add_row([phase["type"], phase["timestamp"], phase["elevation"], phase["azimuth"], phase["cardinal"], phase["distance"]])
+        print(table)
+        print()
+
+
+def printAsJson(predictions):
+    print(json.dumps(predictions))
+
+def getSatellitePredictions(satelliteIndex, latitude, longitude,elevation,horizon_altitude,date, jsonFormat : bool):
     satellites = td.getSatellites()
-    print ("\n")
-    print(f"Satellite: {satellites[satelliteIndex]}")
-    print ("\n")
 
     c = CelestialTracker(satellites[satelliteIndex])
     checkTLEUpdate(satellites[satelliteIndex]) # Checks for TLE update
 
     predictions = c.getISSPredictions(latitude, longitude,elevation,horizon_altitude,date)
-    
-    for event in predictions["events"]: 
-        print(f"Event: {event["event_time"]}")
-        table = PrettyTable()
-        table.field_names = ["Type", "Timestamp", "Elevation", "Azimuth", "Cardinal", "Distance"]
-        for phase in event["phases"] : 
-            table.add_row([phase["type"], phase["timestamp"], phase["elevation"], phase["azimuth"], phase["cardinal"], phase["distance"]])
-        print(table)
-        print()
+
+    if jsonFormat:
+        printAsJson(predictions)
+    else:
+        print ("\n")
+        print(f"Satellite: {satellites[satelliteIndex]}")
+        print ("\n")
+        printPrettyTable(predictions)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -77,6 +89,8 @@ def main():
 
     parser.add_argument("-s","--satellite", help="Satellite index in the TLE file", default=0, type=int)
 
+    parser.add_argument('-j', '--json', action='store_true', help="Prints the satellite passes forecast using JSON format")  
+
     parser.add_argument("latitude", nargs="?", type=float)
     parser.add_argument("longitude", nargs="?", type=float)
 
@@ -87,13 +101,15 @@ def main():
     else:
         if args.latitude is None or args.longitude is None:
             parser.error("latitude and longitude are required unless -l is specified")
-        print ("\n")
-        print(f"Latitude: {args.latitude}  Longitude: {args.longitude}")
+
+        if args.json != True:
+            print ("\n")
+            print(f"Latitude: {args.latitude}  Longitude: {args.longitude}")
 
         latitude = float(args.latitude)
         longitude = float(args.longitude)
 
-        getSatellitePredictions(args.satellite, latitude, longitude,args.elevation,args.horizon_altitude,args.date)
+        getSatellitePredictions(args.satellite, latitude, longitude,args.elevation,args.horizon_altitude,args.date, args.json)
     
 
 if __name__ == "__main__":
