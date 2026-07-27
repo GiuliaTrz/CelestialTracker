@@ -4,6 +4,7 @@ import os
 import sys
 from celestialtracker.celestialtracker import CelestialTracker
 from celestialtracker.tleloader import TLELoader
+from prettytable import PrettyTable
 
 TLE_ENDPOINT = "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle"
 TLE_FILE = "tle_data.tle"
@@ -44,20 +45,23 @@ def shouldUpdateTLE(satellite) -> bool:
 
 def getSatellitePredictions(satelliteIndex, latitude, longitude,elevation,horizon_altitude,date):
     satellites = td.getSatellites()
-
-    print(f"Satellite Index: {satelliteIndex}")
-    print(f"Satellite      : {satellites[satelliteIndex]}")
+    print ("\n")
+    print(f"Satellite: {satellites[satelliteIndex]}")
+    print ("\n")
 
     c = CelestialTracker(satellites[satelliteIndex])
     checkTLEUpdate(satellites[satelliteIndex]) # Checks for TLE update
 
     predictions = c.getISSPredictions(latitude, longitude,elevation,horizon_altitude,date)
     
-    print("----\n\n")
-
-    print(predictions)
-
-    print("----\n\n")
+    for event in predictions["events"]: 
+        print(f"Event: {event["event_time"]}")
+        table = PrettyTable()
+        table.field_names = ["Type", "Timestamp", "Elevation", "Azimuth", "Cardinal", "Distance"]
+        for phase in event["phases"] : 
+            table.add_row([phase["type"], phase["timestamp"], phase["elevation"], phase["azimuth"], phase["cardinal"], phase["distance"]])
+        print(table)
+        print()
 
 def main():
     parser = argparse.ArgumentParser()
@@ -83,8 +87,8 @@ def main():
     else:
         if args.latitude is None or args.longitude is None:
             parser.error("latitude and longitude are required unless -l is specified")
-
-        print(f"LAT: {args.latitude}  LON: {args.longitude}")
+        print ("\n")
+        print(f"Latitude: {args.latitude}  Longitude: {args.longitude}")
 
         latitude = float(args.latitude)
         longitude = float(args.longitude)
