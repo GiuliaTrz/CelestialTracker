@@ -1,0 +1,2 @@
+prettytable==3.18.0
+skyfield==1.54

@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from skyfield.api import load, EarthSatellite, utc, wgs84
 from datetime import datetime, timedelta, timezone
-from satelles import TLE
-import time
 
 class CelestialTracker:
 
