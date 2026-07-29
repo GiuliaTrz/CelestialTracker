@@ -1,19 +1,22 @@
 from urllib.request import urlopen
 import os.path
 from skyfield.api import load
-
+import certifi
+import ssl
 class TLELoader:
     """
     TLELoader takes care of downloading or loading 
     the TLE records.
     """
     def __init__(self, url : str, tleFilePath : str):
+        
         """
         TLELoader constructor
 
         @param url: the TLE server URL
         @param tleFilePath: the file where the TLE records will be downloaded
         """
+        self._ctx = ssl.create_default_context(cafile=certifi.where())
         self._url = url
         self._tleFilePath = tleFilePath
         self._tleResponse = None
@@ -55,7 +58,7 @@ class TLELoader:
         @return the HTTP status code
         """
         returnCode = 0
-        with urlopen(self._url) as response:
+        with urlopen(self._url, context=self._ctx) as response:
             self._tleResponse = response.read()
             returnCode = response.code
 

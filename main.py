@@ -6,6 +6,7 @@ from celestialtracker.celestialtracker import CelestialTracker
 from celestialtracker.tleloader import TLELoader
 from prettytable import PrettyTable
 import json
+
 TLE_ENDPOINT = "https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle"
 TLE_FILE = "tle_data.tle"
 DEFAULT_SATELLITE_INDEX = 0
