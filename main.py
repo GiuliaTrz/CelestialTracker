@@ -11,8 +11,29 @@ TLE_FILE = "tle_data.tle"
 DEFAULT_SATELLITE_INDEX = 0
 
 
-# TLE download demo
 td = TLELoader(TLE_ENDPOINT,TLE_FILE)
+
+def initialize():
+    if os.path.isfile(TLE_FILE) == False:
+        downloadTLE()
+
+def downloadTLE():
+    try:
+        print(f"[INFO] Downloading TLE data from {TLE_ENDPOINT}")
+        rc = td.downloadTLE()
+        if rc != 200:
+            print(f"[ERROR] An error occurred during TLE update HTTP Return code: {rc}")
+        else:
+            print("[SUCCESS] TLE data updated, restart the application")
+            sys.exit(0)
+    except Exception as err:
+        print(f"[ERROR] An error occurred during TLE update: Unexpected {err=}, {type(err)=}")
+
+def checkTLEUpdate(satellite):
+    if shouldUpdateTLE(satellite):
+        print("/!\\ WARNING /!\\ TLE data older than 24 hours")
+        print("[INFO] Trying to update TLE data...")
+        downloadTLE()
     
 def showSatellites():
     satellites = td.getSatellites()
@@ -21,20 +42,6 @@ def showSatellites():
     for index, satellite in enumerate(satellites) :
         print(f"{index}\t{satellite.name}")
 
-def checkTLEUpdate(satellite):
-    if shouldUpdateTLE(satellite):
-        print("/!\\ WARNING /!\\ TLE data older than 24 hours")
-        print("[INFO] Trying to update TLE data...")
-        try:
-            rc = td.downloadTLE()
-            if rc != 200:
-                print(f"[ERROR] An error occurred during TLE update HTTP Return code: {rc}")
-            else:
-                print("[SUCCESS] TLE data updated, restart the application")
-                sys.exit(0)
-        except Exception as err:
-            print(f"[ERROR] An error occurred during TLE update: Unexpected {err=}, {type(err)=}")
-
 def shouldUpdateTLE(satellite) -> bool:
     """
     Returns True if the TLE file is older than 24 hours (UTC date time)
@@ -42,7 +49,6 @@ def shouldUpdateTLE(satellite) -> bool:
     tle_date = satellite.epoch.utc_datetime()
     now = datetime.now(timezone.utc)
     return (now - tle_date) > timedelta(hours=24)
-
 
 def printPrettyTable(predictions):
     for event in predictions["events"]: 
@@ -96,9 +102,11 @@ def main():
 
     args = parser.parse_args()
     if args.list_satellites == True:
+        initialize()
         showSatellites()
         return
     else:
+        initialize()
         if args.latitude is None or args.longitude is None:
             parser.error("latitude and longitude are required unless -l is specified")
 
