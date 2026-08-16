@@ -26,7 +26,7 @@ def downloadTLE():
             print(f"[ERROR] An error occurred during TLE update HTTP Return code: {rc}")
         else:
             print("[SUCCESS] TLE data updated, restart the application")
-            sys.exit(0)
+            sys.exit(1)
     except Exception as err:
         print(f"[ERROR] An error occurred during TLE update: Unexpected {err=}, {type(err)=}")
 
@@ -36,12 +36,17 @@ def checkTLEUpdate(satellite):
         print("[INFO] Trying to update TLE data...")
         downloadTLE()
     
-def showSatellites():
+def showSatellites(use_json):
     satellites = td.getSatellites()
-    print ("Satellites:")
-
-    for index, satellite in enumerate(satellites) :
-        print(f"{index}\t{satellite.name}")
+    if use_json:
+        names = []
+        for satellite in satellites:
+            names.append(satellite.name)
+        print(json.dumps(names))
+    else:
+        print ("Satellites:")
+        for index, satellite in enumerate(satellites) :
+            print(f"{index}\t{satellite.name}")
 
 def shouldUpdateTLE(satellite) -> bool:
     """
@@ -104,7 +109,7 @@ def main():
     args = parser.parse_args()
     if args.list_satellites == True:
         initialize()
-        showSatellites()
+        showSatellites(args.json)
         return
     else:
         initialize()
