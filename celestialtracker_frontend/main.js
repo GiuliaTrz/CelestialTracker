@@ -36,6 +36,14 @@ async function main() {
     }else{
         console.error(output.stderr);
     }
+
+    console.info("-----");
+    const output1 = await tracker.getPredictions(0, 1,1);
+    if(output1.rc == 0){
+        console.info(output1.stdout);
+    }else{
+        console.error(output1.stderr);
+    }
     */
 }
 main();
