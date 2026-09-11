@@ -132,7 +132,11 @@ body {
     border-radius: 999px;
 }
 
-.pill--idle { color: var(--gold); border-color: rgba(224, 180, 100, 0.28); }
+.pill--idle         { color: var(--gold); border-color: rgba(224, 180, 100, 0.28); }
+.pill--computing    { color: var(--gold); border-color: rgba(224, 180, 100, 0.28); }
+.pill--success      { color: var(--gold); border-color: rgba(0, 255, 55); }
+.pill--error        { color: var(--gold); border-color: rgba(255, 8, 0); }
+.pill--update       { color: var(--gold); border-color: rgba(249, 253, 0); }
 
 /* Body */
 .app-body {
