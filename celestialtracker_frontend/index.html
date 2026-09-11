@@ -2,131 +2,162 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.css">
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CelestialTracker</title>
+
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
-    <!-- APPLICATION MAIN CONTAINER -->
-    <div class="container-fluid" id="main-container">
-        <!-- TOP BAR -->
-        <div class="row">
-            <div class="col-4">
-                <h1>CelestialTracker</h1>
-            </div>
-        </div>
-        <!-- SEARCH FORM -->
-        <div class="row">
-            <div class="col-4">
-                <div class="container">
-                    <div class="row g-3 align-items-center">
-                        <div class="col-auto">
-                            <label for="txtbLatitude" class="col-form-label">Latitude:</label>
-                        </div>
-                        <div class="col-auto">
-                            <input type="text" id="txtbLatitude" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row g-3 align-items-center">
-                        <div class="col-auto">
-                            <label for="txtbLongitude" class="col-form-label">Longitude:</label>
-                        </div>
-                        <div class="col-auto">
-                            <input type="text" id="txtbLongitude" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row g-3 align-items-center">
-                        <div class="col-auto">
-                            <label for="txtbLongitude" class="col-form-label">Satellite:</label>
-                        </div>
-                        <div class="col-auto">
-                            <select id="menuSelectSatellite" class="form-select" aria-label="Default select example">
-                                <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                    </div>
+    <div class="app" id="main-container">
+
+        <!-- TOP BAR  -->
+        <header class="app-header">
+            <div class="brand">
+                <span class="brand__mark"><i class="bi bi-stars"></i></span>
+                <div class="brand__text">
+                    <h1>CelestialTracker</h1>
+                    <span class="brand__sub">Orbital Pass Predictor</span>
                 </div>
             </div>
-        </div>
 
-        <!-- SEARCH RESULTS -->
-        <div class="row">
-            <div class="col-4">
-                <table class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Timestamp</th>
-                            <th>Elevation°</th>
-                            <th>Azimuth°</th>
-                            <th>Cardinal</th>
-                            <th>Distance (Km)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>AOS</td>
-                            <td>2026-08-03 05:42:18 UTC</td>
-                            <td>2.3°</td>
-                            <td>41.8°</td>
-                            <td>NE</td>
-                            <td>2,184</td>
-                        </tr>
-                        <tr>
-                            <td>Peak</td>
-                            <td>2026-08-03 05:47:56 UTC</td>
-                            <td>71.5°</td>
-                            <td>128.4°</td>
-                            <td>SE</td>
-                            <td>542</td>
-                        </tr>
-                        <tr>
-                            <td>LOS</td>
-                            <td>2026-08-03 05:53:11 UTC</td>
-                            <td>1.9°</td>
-                            <td>214.6°</td>
-                            <td>SW</td>
-                            <td>2,297</td>
-                        </tr>
-                        <tr>
-                            <td>AOS</td>
-                            <td>2026-08-03 07:19:44 UTC</td>
-                            <td>3.1°</td>
-                            <td>318.9°</td>
-                            <td>NW</td>
-                            <td>2,135</td>
-                        </tr>
-                        <tr>
-                            <td>Peak</td>
-                            <td>2026-08-03 07:25:21 UTC</td>
-                            <td>84.2°</td>
-                            <td>359.6°</td>
-                            <td>N</td>
-                            <td>518</td>
-                        </tr>
-                        <tr>
-                            <td>LOS</td>
-                            <td>2026-08-03 07:30:54 UTC</td>
-                            <td>2.0°</td>
-                            <td>46.2°</td>
-                            <td>NE</td>
-                            <td>2,261</td>
-                        </tr>
-                    </tbody>
-                </table>
-
+            <div class="app-header__meta">
+                <span class="pill"><i class="bi bi-clock-history"></i> UTC</span>
+                <span class="pill pill--idle"><i class="bi bi-broadcast"></i> Standby</span>
             </div>
-        </div>
+        </header>
+
+        <!--  BODY  -->
+        <main class="app-body">
+
+            <!--  SEARCH FORM -->
+            <aside class="panel panel--form">
+                <div class="panel__head">
+                    <i class="bi bi-sliders2"></i>
+                    <span>Observation parameters</span>
+                </div>
+
+                <form class="form-grid" onsubmit="return false;">
+
+                    <div class="field">
+                        <label for="txtbLatitude">Latitude</label>
+                        <input type="text" id="txtbLatitude" class="form-control"
+                               placeholder="41.9028" inputmode="decimal" autocomplete="off">
+                    </div>
+
+                    <div class="field">
+                        <label for="txtbLongitude">Longitude</label>
+                        <input type="text" id="txtbLongitude" class="form-control"
+                               placeholder="12.4964" inputmode="decimal" autocomplete="off">
+                    </div>
+
+                    <div class="field">
+                        <label for="txtbDate">Date (UTC)</label>
+                        <input type="date" id="txtbDate" class="form-control">
+                    </div>
+
+                    <div class="field">
+                        <label for="menuSelectSatellite">Satellite</label>
+                        <select id="menuSelectSatellite" class="form-select">
+                            <option selected disabled>Select a target…</option>
+                            <option value="iss">ISS (ZARYA)</option>
+                            <option value="noaa19">NOAA 19</option>
+                            <option value="hst">Hubble Space Telescope</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-compute">
+                        <i class="bi bi-calculator"></i> Compute passes
+                    </button>
+                </form>
+            </aside>
+
+            <!--  SEARCH RESULTS  -->
+            <section class="panel panel--results">
+                <div class="panel__head">
+                    <i class="bi bi-table"></i>
+                    <span>Pass predictions</span>
+                    <span class="panel__meta">6 events</span>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Timestamp</th>
+                                <th class="num">Elevation°</th>
+                                <th class="num">Azimuth°</th>
+                                <th>Cardinal</th>
+                                <th class="num">Distance (Km)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="tag tag--aos">AOS</span></td>
+                                <td class="mono">2026-08-03 05:42:18 UTC</td>
+                                <td class="num">2.3°</td>
+                                <td class="num">41.8°</td>
+                                <td class="mono">NE</td>
+                                <td class="num">2,184</td>
+                            </tr>
+                            <tr>
+                                <td><span class="tag tag--peak">Peak</span></td>
+                                <td class="mono">2026-08-03 05:47:56 UTC</td>
+                                <td class="num">71.5°</td>
+                                <td class="num">128.4°</td>
+                                <td class="mono">SE</td>
+                                <td class="num">542</td>
+                            </tr>
+                            <tr>
+                                <td><span class="tag tag--los">LOS</span></td>
+                                <td class="mono">2026-08-03 05:53:11 UTC</td>
+                                <td class="num">1.9°</td>
+                                <td class="num">214.6°</td>
+                                <td class="mono">SW</td>
+                                <td class="num">2,297</td>
+                            </tr>
+                            <tr>
+                                <td><span class="tag tag--aos">AOS</span></td>
+                                <td class="mono">2026-08-03 07:19:44 UTC</td>
+                                <td class="num">3.1°</td>
+                                <td class="num">318.9°</td>
+                                <td class="mono">NW</td>
+                                <td class="num">2,135</td>
+                            </tr>
+                            <tr>
+                                <td><span class="tag tag--peak">Peak</span></td>
+                                <td class="mono">2026-08-03 07:25:21 UTC</td>
+                                <td class="num">84.2°</td>
+                                <td class="num">359.6°</td>
+                                <td class="mono">N</td>
+                                <td class="num">518</td>
+                            </tr>
+                            <tr>
+                                <td><span class="tag tag--los">LOS</span></td>
+                                <td class="mono">2026-08-03 07:30:54 UTC</td>
+                                <td class="num">2.0°</td>
+                                <td class="num">46.2°</td>
+                                <td class="mono">NE</td>
+                                <td class="num">2,261</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+
+        <!--  FOOTER  -->
+        <footer class="app-footer">
+            <span>Giulia Trozzi — Francesco Valentini</span>
+            <span class="app-footer__ver">CelestialTracker · v1.0</span>
+        </footer>
+
     </div>
 </body>
-<footer>Giulia Trozzi - Francesco Valentini</footer>
 
 </html>

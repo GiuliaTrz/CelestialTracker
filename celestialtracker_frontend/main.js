@@ -4,8 +4,10 @@ const {CelestialTracker} = require("./celestial-tracker-library/celestialtracker
 
 const createWindow = () => {
     const win = new BrowserWindow({
-        width: 800,
-        height: 600
+        width: 1200,
+        height: 650,
+        minWidth: 1200,
+        minHeight: 650,
     })
 
     win.loadFile('index.html')
