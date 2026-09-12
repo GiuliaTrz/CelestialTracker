@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require('electron/main')
+const { app, BrowserWindow, ipcMain  } = require('electron/main')
+const path = require('node:path')
 
 const {CelestialTracker} = require("./celestial-tracker-library/celestialtracker")
 
@@ -8,12 +9,36 @@ const createWindow = () => {
         height: 650,
         minWidth: 1200,
         minHeight: 650,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        }
     })
 
     win.loadFile('index.html')
 }
 
+
+async function loadSatellites() {
+    /*console.info("[main.js] Loading satellites...");
+    const tracker = new CelestialTracker("C:\\Progetti\\Python\\CelestialTracker\\dist\\main.exe");
+    const output = await tracker.listSatellites();
+    if(output.rc == 0){
+        console.info("[main.js] Satellites loaded successfully.");
+        console.info(output.stdout);
+        return output;
+    }else{
+        console.error("[main.js] Failed to load satellites.");
+        console.error(output.stderr);
+        return output;
+    }*/
+}
+
+
 app.whenReady().then(() => {
+    ipcMain.handle('load-satellites', async () => {
+        return await loadSatellites();
+    });
+
     createWindow()
 
     app.on('activate', () => {
@@ -23,11 +48,14 @@ app.whenReady().then(() => {
     })
 })
 
+
+
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit()
     }
 })
+
 
 async function main() {
     /*
