@@ -1,4 +1,7 @@
 const lblState = document.getElementById("lblState");
+const txtbLatitude = document.getElementById("txtbLatitude");
+const txtbLongitude = document.getElementById("txtbLongitude");
+const txtbDate = document.getElementById("txtbDate");
 const menuSelectSatellite = document.getElementById("menuSelectSatellite");
 
 const States = {
@@ -89,4 +92,12 @@ function populateSatelliteSelect() {
         option.textContent = satellites[i];
         menuSelectSatellite.appendChild(option);
     } 
+}
+
+function onClickComputePasses(){
+    const latitude = txtbLatitude.value;
+    const longitude = txtbLongitude.value;
+    const date = txtbDate.value;
+    alert(latitude +" " + longitude + " " +  date);
+
 }
