@@ -98,6 +98,19 @@ function onClickComputePasses(){
     const latitude = txtbLatitude.value;
     const longitude = txtbLongitude.value;
     const date = txtbDate.value;
+    console.info(isNumber(latitude));
+    console.info(isNumber(longitude));
     alert(latitude +" " + longitude + " " +  date);
 
 }
+
+/**
+  * Checks if the variable is a number
+  * 
+  * @param {*} variable 
+  * @returns true if the variable is a number
+  */
+ function isNumber(variable){
+    const regex=/^(0|[1-9]\d*)(\.\d+)?$/;
+    return regex.test(variable);
+ }
