@@ -19,7 +19,7 @@ const createWindow = () => {
 
 
 async function loadSatellites() {
-    /*console.info("[main.js] Loading satellites...");
+    console.info("[main.js] Loading satellites...");
     const tracker = new CelestialTracker("C:\\Progetti\\Python\\CelestialTracker\\dist\\main.exe");
     const output = await tracker.listSatellites();
     if(output.rc == 0){
@@ -30,13 +30,31 @@ async function loadSatellites() {
         console.error("[main.js] Failed to load satellites.");
         console.error(output.stderr);
         return output;
-    }*/
+    }
+}
+
+async function getPredictions(satelliteId, latitude, longitude, date){
+    const tracker = new CelestialTracker("C:\\Progetti\\Python\\CelestialTracker\\dist\\main.exe");
+    const output = await tracker.getPredictions(satelliteId, latitude, longitude, date);
+    if(output.rc == 0){
+        console.info("[main.js] Satellite passes loaded successfully.");
+        console.info(output.stdout);
+        return output;
+    }else{
+        console.error("[main.js] Failed to load satellite passes.");
+        console.error(output.stderr);
+        return output;
+    }
 }
 
 
 app.whenReady().then(() => {
     ipcMain.handle('load-satellites', async () => {
         return await loadSatellites();
+    });
+
+    ipcMain.handle('getPredictions', async (event, satelliteId, latitude, longitude, date) => {
+        return await getPredictions(satelliteId, latitude, longitude, date);
     });
 
     createWindow()

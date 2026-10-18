@@ -95,13 +95,42 @@ function populateSatelliteSelect() {
 }
 
 function onClickComputePasses(){
-    const latitude = txtbLatitude.value;
-    const longitude = txtbLongitude.value;
-    const date = txtbDate.value;
-    console.info(isNumber(latitude));
-    console.info(isNumber(longitude));
-    alert(latitude +" " + longitude + " " +  date);
+    
 
+    const satId = parseInt(menuSelectSatellite.value);
+    const numLatitude = parseFloat(txtbLatitude.value);
+    const numLongitude = parseFloat(txtbLongitude.value);
+    const date = txtbDate.value; 
+    getSatellitePasses(satId, numLatitude, numLongitude, date);
+}
+
+/**
+ * Calculates the satellite predictions
+ * 
+ * @param {double} latitude 
+ * @param {double} longitude 
+ * @param {string} date The date for which you want to get the satellite passes forecast (empty for current date) (format: yyyy-mm-dd)
+ */
+function getSatellitePasses(satId, latitude, longitude, date) {
+    console.info("Loading satellite passes...");
+    setState(States.COMPUTING);
+    // TODO: implement custom date selection
+    window.electronAPI.getPredictions(satId,latitude,longitude,"").then((output) => {
+        if(output.rc == 0){ // Successful
+            console.info("Loaded satellite passes");
+            console.info(output.stdout);
+            passes = JSON.parse(output.stdout);
+            console.info(passes);
+            setState(States.STANDBY);
+        }else{ // Failed
+            console.error("Failed to load satellite passes.");
+            console.error(output.stderr);
+            setState(States.ERROR);
+        }
+    }).catch((error) => {
+        console.error("Error while loading satellite passes:", error);
+        setState(States.ERROR);
+    });
 }
 
 /**
